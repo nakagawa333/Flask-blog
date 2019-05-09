@@ -17,10 +17,9 @@ class User(db.Model,UserMixin):
 	posts = db.relationship('Post', backref='author', lazy=True)
 
 	def get_reset_token(self,expires_sec=1800):
-		s = Serializer(app.config["SECRET_KEY"], expires_sec)
-		return s.dumps({'user_id' : self.id}).decode('utf-8')
+		s = Serializer(app.config['SECRET_KEY'],expires_sec)
+		return s.dumps({'user_id':self.id}).decode('utf-8')
 
-	#渡された引数がそのまま順に表示される
 	@staticmethod
 	def verify_reset_token(token):
 		s = Serializer(app.config['SECRET_KEY'])
@@ -31,7 +30,7 @@ class User(db.Model,UserMixin):
 		return User.query.get(user_id)
 
 	def __repr__(self):
-		return "User(username={0},email={1},image_file={2})".format(self.username,self.email,self.image_file)
+		return f"User('{self.username}','{self.email}','{self.image_file}')"
 
 class Post(db.Model):
 	id = db.Column(db.Integer,primary_key=True)
@@ -39,7 +38,17 @@ class Post(db.Model):
 	date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	content = db.Column(db.Text,nullable=False)
 	user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
+	comments = db.relationship("Comment", backref="author",lazy=True)
 
 	def __repr__(self):
-		return "Post('{0}','{1}')".format(self.title,self.date_posted)
+		return f"Post('{self.id}','{self.title}','{self.date_posted}','{self.content}','{self.user_id}')"
 
+class Comment(db.Model):
+	id = db.Column(db.Integer,primary_key=True)
+	title = db.Column(db.String(300),nullable=False)
+	data_posted = db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
+	content = db.Column(db.Text,nullable=False)
+	commit_id = db.Column(db.Integer,db.ForeignKey('post.id'),nullable=False)
+
+	def __repr__(self):
+	     return f"Comment('{self.id}','{self.title}','{self.commit_id}')"		

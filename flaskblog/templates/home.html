@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 {% for post in posts.items %}
-<article class="media content-section" src="{{ url_for('static',filename='profile_pics/' + post.author.image_file)}}">
-	<img class="rounded-circle article-img" >
+<article class="media content-section">
+  <a href="/">
+  <img class="rounded-circle article-img" src="{{ url_for('static',filename='profile_pics/' + post.author.image_file)}}">
+</a>
 	<div class="media-body">
 		<div class="article-metadata">
 			<a class="mr-2" href="">{{ post.author.username}}</a>
@@ -26,3 +28,6 @@
     {% endif %}
     {% endfor %}
 {% endblock content %}
+
+
+

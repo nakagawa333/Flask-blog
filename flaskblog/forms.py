@@ -34,7 +34,7 @@ class LoginForm(FlaskForm):
 class UpdateAccountForm(FlaskForm):
 	username = StringField('ユーザー名',validators=[DataRequired(),Length(min=2,max=20)])
 	email = StringField('メールアドレス',validators=[DataRequired(),Email()])
-	picture = FileField('写真を更新する'	,validators=[FileAllowed(['jpg','png'])])
+	picture = FileField('写真を更新する',validators=[FileAllowed(['jpg','png'])])
 	submit = SubmitField('更新')
 
 	def validate_username(self,username):
@@ -53,6 +53,12 @@ class PostForm(FlaskForm):
 	title = StringField('Title',validators=[DataRequired()])
 	content = TextAreaField('content',validators=[DataRequired()])
 	submit = SubmitField('Post')
+	picture = FileField('写真を更新する',validators=[FileAllowed(['jpg','png'])])
+
+class CommentForm(FlaskForm):
+	title = StringField("title",validators=[DataRequired()])
+	content = TextAreaField("content",validators=[DataRequired()])
+	submit = SubmitField("submit")
 
 class RequestResetForm(FlaskForm):
 	email = StringField('Email',validators=[DataRequired(),Email()])
@@ -63,7 +69,7 @@ class RequestResetForm(FlaskForm):
 		if user is None:
 			raise ValidationError('このアカウントには、メールアドレスがありません。最初にメールアドレスを登録する必要があります。')
 
-
+		
 class ResetPasswordForm(FlaskForm):
 	password = PasswordField('Password',validators=[DataRequired()])
 	confirm_password = PasswordField('Confirm Password',validators=[DataRequired(),EqualTo('password')])

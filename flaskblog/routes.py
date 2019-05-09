@@ -1,10 +1,11 @@
 import os
+import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect,request,abort
 from  flaskblog import app,db,bcrypt,mail
 from flask_login import login_user, current_user, logout_user, login_required
-from flaskblog.forms import RegistrationForm,LoginForm,UpdateAccountForm,PostForm,RegistrationForm,ResetPasswordForm,RequestResetForm
-from flaskblog.models import User,Post
+from flaskblog.forms import RegistrationForm,LoginForm,UpdateAccountForm,PostForm,RegistrationForm,ResetPasswordForm,RequestResetForm,CommentForm
+from flaskblog.models import User,Post,Comment
 from flask_mail import Message
 
 
@@ -100,10 +101,16 @@ def new_post():
 		return redirect(url_for('home'))
 	return render_template('create_post.html',title="New Post",form=form,legend="New Post")
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>',methods=["GET","POST"])
 def post(post_id):
 	post = Post.query.get_or_404(post_id)
-	return render_template('post.html',title=post.title,post=post)
+	form = CommentForm()
+	comments = Comment.query.filter_by(commit_id=post_id).all()
+	if request.method == "POST":
+		comment = Comment(title=form.title.data,content=form.content.data,commit_id=post_id)
+		db.session.add(comment)
+		db.session.commit()
+	return render_template('post.html',title=post.title,post=post,form=form,comments=comments)
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -143,10 +150,12 @@ def user_posts(username):
 
 def send_reset_email(user):
 	token = user.get_reset_token()
-	msg = Message('Password Reset Request',
-		                           sender="noreply@demo.com",
-		                           recipients=[user.email])
-	msg.body = {url_for('reset_token',token=token,_external=True)}
+	msg = Message('Passoword request',
+		          sender = "noreply@gmail.com",
+		          recipients=[user.email])
+	msg.body = f'''To reset your password,visit the following link:
+	{url_for("reset_token",token=token, _external=True)}
+	'''
 	mail.send(msg)
 
 @app.route('/reset_password',methods=['GET','POST'])
