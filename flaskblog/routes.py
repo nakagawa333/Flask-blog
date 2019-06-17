@@ -7,7 +7,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flaskblog.forms import RegistrationForm,LoginForm,UpdateAccountForm,PostForm,RegistrationForm,ResetPasswordForm,RequestResetForm,CommentForm
 from flaskblog.models import User,Post,Comment
 from flask_mail import Message
-
+from sqlalchemy import or_
 
 @app.route("/")
 @app.route("/home")
@@ -16,6 +16,17 @@ def home():
 	posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page,per_page=5)
 	return render_template('home.html',posts=posts)
 
+@app.route("/search",methods=["POST"])
+def  search_post():
+	search_post = request.form["search"]
+	page = request.args.get("page",1,type=int)
+	posts = db.session.query(Post).\
+	filter(or_(\
+		Post.title.like("%" + search_post + "%"),\
+		Post.content.like("%" + search_post + "%"),\
+		)).order_by(Post.date_posted.desc()).paginate(page=page,per_page=5)
+	return render_template("search_post.html",posts=posts)
+	
 @app.route("/about")
 def about():
 	return render_template("about.html",title="About")
@@ -184,5 +195,3 @@ def reset_token(token):
 		flash('Your account  has been created!')
 		return redirect(url_for('login'))
 	return render_template('reset_token.html',title="パスワードをリセットする",form=form)
-
-

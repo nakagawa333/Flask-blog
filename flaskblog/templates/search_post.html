@@ -1,0 +1,35 @@
+{% extends "layout.html" %}]
+
+{% block content %}
+
+{% for post in posts.items %}
+
+<div class="card" style="margin-top:10px;">
+	<div class="card-body">
+		<img class="rounded-circle article-img" src="{{ url_for('static',filename='profile_pics/' + post.author.image_file)}}">
+		<a class="mr-2"> {{ post.author.username }}</a>
+		<small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d')}}</small>
+	 <h2><a class="article-title" href="{{url_for('post',post_id=post.id)}}">{{ post.title}}</a></h2>
+		<p>{{ post.content }}</p>
+	</div>
+</div>
+
+{% endfor %}
+
+{% if not posts.items %}
+<h2 class="text-center">検索結果に適当な記事がありませんでした。</h2>
+{% endif %}
+
+{% for page_num in posts.iter_pages(left_edge=1,right_edge=1, left_current=1,right_current=2) %}
+  {% if page_num %}
+    {% if posts.page == page_num %}
+   <a class="btn btn-info mb-4" href="{{ url_for('home',page=page_num)}}"> {{ page_num }}</a>
+    {% else %}
+       <a class="btn btn-outline-info mb-4" href="{{ url_for('home',page=page_num)}}">{{ page_num}}</a>
+    {% endif %}
+   {% else %}
+      <p>...</p>
+    {% endif %}
+    {% endfor %}
+
+{% endblock %}

@@ -7,13 +7,14 @@
 </a>
 	<div class="media-body">
 		<div class="article-metadata">
-			<a class="mr-2" href="">{{ post.author.username}}</a>
+			<a class="mr-2" href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username}}</a>
 			<small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d')}}</small>
 		</div>
 		<h2><a class="article-title" href="{{url_for('post',post_id=post.id)}}">{{ post.title}}</a></h2>
 		<p class="article-content">{{ post.content }}</p>
 	</div>
 </article>
+
 
 {% endfor %}
 {% for page_num in posts.iter_pages(left_edge=1,right_edge=1, left_current=1,right_current=2) %}
@@ -29,5 +30,6 @@
     {% endfor %}
 {% endblock content %}
 
+{% block body %}
 
-
+{% endblock %}

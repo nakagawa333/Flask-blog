@@ -69,10 +69,11 @@
 
         <div class="col-md-4" id="ani">
             <div class="content-section">
+              <form action="/search" method="post">
               <div class="form-group" id="form-group">
-              <input type="search" class="form-control" placeholder="seaech for flaskblog" >
+              <input type="search" class="form-control" placeholder="seaech for flaskblog" name="search">
               <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
-
+            </form>
             </div>
 
                 <h3>Our Sidebar</h3>
@@ -85,14 +86,20 @@
               </ul>
             </p>
           </div>
-           <div class="card">
-            <img class="card-img-top img-fluid rounded" src="{{ url_for('static',filename='profile_pics/uchihamadara.jpg')}}" alt="Card image top">
-            <div class="card-body">
-              
-              <h4>nakagawa sosei</h4>
+
+          {% block body %}
+
+          {% endblock %}
+
+          <div class="card">
+                        <img class="card-img-top img-fluid rounded" src="{{ url_for('static',filename='profile_pics/6875056a1fc7e583.png')}}" alt="Card image top">
+
+           <div class="card-body">
+                  <h4>nakagawa sosei</h4>
             <p>Webライター兼Webエンジニア。いずれは、アプリ開発もやってみたいです。</p>
             <a href="{{ url_for('about')}}" class="btn btn-primary">詳細を見る</a>
-          </div>
+
+            </div>
           </div>
         </div>
       </div>
