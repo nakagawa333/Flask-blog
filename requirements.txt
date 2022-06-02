@@ -13,7 +13,7 @@ Flask-Social==1.6.2
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==0.14.2
 future==0.17.1
-html5lib==0.999
+html5lib==0.99999999
 httplib2==0.12.3
 imagesize==1.1.0
 itsdangerous==1.1.0
